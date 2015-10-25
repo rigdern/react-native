@@ -60,7 +60,7 @@ const validateOpts = declareOpts({
   },
   platforms: {
     type: 'array',
-    default: ['ios', 'android'],
+    default: ['ios', 'android', 'windows'],
   },
   cache: {
     type: 'object',
