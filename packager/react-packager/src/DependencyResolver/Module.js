@@ -152,6 +152,7 @@ function extractRequires(code /*: string*/) /*: Array<string>*/ {
   };
 
   code
+    .replace('\r', '')
     .replace(blockCommentRe, '')
     .replace(lineCommentRe, '')
     // Parse sync dependencies. See comment below for further detils.
