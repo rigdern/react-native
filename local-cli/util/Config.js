@@ -62,8 +62,8 @@ function findParentDirectory(currentFullPath, filename) {
     var exists = fs.existsSync(path.join(fullPath, filename));
     return exists ? fullPath : testDir(parts.slice(0, -1));
   };
-
-  return testDir(currentFullPath.substring(1).split(path.sep));
+  
+  return testDir(currentFullPath.substring(root.length).split(path.sep));
 }
 
 module.exports = Config;
