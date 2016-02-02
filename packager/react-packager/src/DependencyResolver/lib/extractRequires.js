@@ -22,6 +22,7 @@ function extractRequires(code) {
   };
 
   code = code
+    .replace(/\\r/, '')
     .replace(blockCommentRe, '')
     .replace(lineCommentRe, '')
     // Parse the sync dependencies this module has. When the module is
