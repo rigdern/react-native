@@ -64,6 +64,8 @@ NSString *const RCTUIManagerRootViewKey = @"RCTUIManagerRootViewKey";
 
 @end
 
+static BOOL _willShowKeyboard;
+
 @implementation RCTAnimation
 
 static UIViewAnimationOptions UIViewAnimationOptionsFromRCTAnimationType(RCTAnimationType type)
@@ -78,12 +80,31 @@ static UIViewAnimationOptions UIViewAnimationOptionsFromRCTAnimationType(RCTAnim
     case RCTAnimationTypeEaseInEaseOut:
       return UIViewAnimationOptionCurveEaseInOut;
     case RCTAnimationTypeKeyboard:
-      // http://stackoverflow.com/questions/18870447/how-to-use-the-default-ios7-uianimation-curve
-      return (UIViewAnimationOptions)(7 << 16);
+      // http://stackoverflow.com/questions/18870447/how-to-use-the-default-ios7-uianimation-curve/19439283#19439283
+      return (UIViewAnimationOptions)(_willShowKeyboard ? 7 << 16 : 6 << 16);
     default:
       RCTLogError(@"Unsupported animation type %zd", type);
       return UIViewAnimationOptionCurveEaseInOut;
   }
+}
+
++ (void)initializeStatics
+{
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillChangeFrame:)
+                                                name:UIKeyboardWillChangeFrameNotification
+                                               object:nil];
+  });
+}
+
++ (void)keyboardWillChangeFrame:(NSNotification *)notification
+{
+  NSDictionary *userInfo = notification.userInfo;
+  CGRect beginFrame = [userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+  CGRect endFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+  _willShowKeyboard = beginFrame.origin.y > endFrame.origin.y;
 }
 
 - (instancetype)initWithDuration:(NSTimeInterval)duration dictionary:(NSDictionary *)config
@@ -316,6 +337,8 @@ RCT_EXPORT_MODULE()
                                            selector:@selector(interfaceOrientationWillChange:)
                                                name:UIApplicationWillChangeStatusBarOrientationNotification
                                              object:nil];
+  
+  [RCTAnimation initializeStatics];
 }
 
 - (dispatch_queue_t)methodQueue
