@@ -16,6 +16,9 @@
 		58B511D01A9E6C5C00147676 /* RCTShadowText.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B511CB1A9E6C5C00147676 /* RCTShadowText.m */; };
 		58B511D11A9E6C5C00147676 /* RCTTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B511CD1A9E6C5C00147676 /* RCTTextManager.m */; };
 		58B512161A9E6EFF00147676 /* RCTText.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B512141A9E6EFF00147676 /* RCTText.m */; };
+		AFCF17451CDD8C0800937160 /* RCTImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = AFCF17441CDD8C0800937160 /* RCTImageLoader.m */; };
+		AFCF17481CDD8C1100937160 /* RCTResizeMode.m in Sources */ = {isa = PBXBuildFile; fileRef = AFCF17471CDD8C1100937160 /* RCTResizeMode.m */; };
+		AFCF174B1CDD8C3E00937160 /* RCTImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = AFCF174A1CDD8C3E00937160 /* RCTImageUtils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,6 +53,12 @@
 		58B511CD1A9E6C5C00147676 /* RCTTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTTextManager.m; sourceTree = "<group>"; };
 		58B512141A9E6EFF00147676 /* RCTText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTText.m; sourceTree = "<group>"; };
 		58B512151A9E6EFF00147676 /* RCTText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTText.h; sourceTree = "<group>"; };
+		AFCF17431CDD8C0800937160 /* RCTImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTImageLoader.h; sourceTree = "<group>"; };
+		AFCF17441CDD8C0800937160 /* RCTImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTImageLoader.m; sourceTree = "<group>"; };
+		AFCF17461CDD8C1100937160 /* RCTResizeMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTResizeMode.h; sourceTree = "<group>"; };
+		AFCF17471CDD8C1100937160 /* RCTResizeMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTResizeMode.m; sourceTree = "<group>"; };
+		AFCF17491CDD8C3E00937160 /* RCTImageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTImageUtils.h; sourceTree = "<group>"; };
+		AFCF174A1CDD8C3E00937160 /* RCTImageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTImageUtils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +75,12 @@
 		58B511921A9E6C1200147676 = {
 			isa = PBXGroup;
 			children = (
+				AFCF17491CDD8C3E00937160 /* RCTImageUtils.h */,
+				AFCF174A1CDD8C3E00937160 /* RCTImageUtils.m */,
+				AFCF17461CDD8C1100937160 /* RCTResizeMode.h */,
+				AFCF17471CDD8C1100937160 /* RCTResizeMode.m */,
+				AFCF17431CDD8C0800937160 /* RCTImageLoader.h */,
+				AFCF17441CDD8C0800937160 /* RCTImageLoader.m */,
 				58B511C61A9E6C5C00147676 /* RCTRawTextManager.h */,
 				58B511C71A9E6C5C00147676 /* RCTRawTextManager.m */,
 				58B511C81A9E6C5C00147676 /* RCTShadowRawText.h */,
@@ -158,11 +173,14 @@
 				131B6AC01AF0CD0600FFC3E0 /* RCTTextView.m in Sources */,
 				58B511CE1A9E6C5C00147676 /* RCTRawTextManager.m in Sources */,
 				1362F1001B4D51F400E06D8C /* RCTTextField.m in Sources */,
+				AFCF17451CDD8C0800937160 /* RCTImageLoader.m in Sources */,
 				58B512161A9E6EFF00147676 /* RCTText.m in Sources */,
+				AFCF17481CDD8C1100937160 /* RCTResizeMode.m in Sources */,
 				1362F1011B4D51F400E06D8C /* RCTTextFieldManager.m in Sources */,
 				131B6AC11AF0CD0600FFC3E0 /* RCTTextViewManager.m in Sources */,
 				58B511CF1A9E6C5C00147676 /* RCTShadowRawText.m in Sources */,
 				58B511D01A9E6C5C00147676 /* RCTShadowText.m in Sources */,
+				AFCF174B1CDD8C3E00937160 /* RCTImageUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
