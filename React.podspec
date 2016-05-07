@@ -92,6 +92,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'RCTText' do |ss|
     ss.dependency         'React/Core'
+    ss.dependency         'React/RCTNetwork'
     ss.source_files     = "Libraries/Text/*.{h,m}"
     ss.preserve_paths   = "Libraries/Text/*.js"
   end

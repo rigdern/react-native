@@ -52,9 +52,13 @@ static css_dim_t RCTMeasure(void *context, float width, css_measure_mode_t width
   return result;
 }
 
-- (instancetype)init
+RCT_NOT_IMPLEMENTED(- (instancetype)init)
+
+- (instancetype)initWithBridge:(RCTBridge *)bridge
 {
   if ((self = [super init])) {
+    _bridge = bridge;
+    
     _fontSize = NAN;
     _letterSpacing = NAN;
     _isHighlighted = NO;
@@ -67,14 +71,6 @@ static css_dim_t RCTMeasure(void *context, float width, css_measure_mode_t width
                                              selector:@selector(contentSizeMultiplierDidChange:)
                                                  name:RCTUIManagerWillUpdateViewsDueToContentSizeMultiplierChangeNotification
                                                object:nil];
-  }
-  return self;
-}
-
-- (instancetype)initWithBridge:(RCTBridge *)bridge
-{
-  if ((self = [self init])) {
-    _bridge = bridge;
   }
   return self;
 }
@@ -286,7 +282,7 @@ static css_dim_t RCTMeasure(void *context, float width, css_measure_mode_t width
                                  resizeMode:RCTResizeModeCover
                               progressBlock:nil
                             completionBlock:^(NSError *error, UIImage *image) {
-                              attachment.image = image;
+//                              attachment.image = image;
                             }];
       attachment.bounds = CGRectMake(0.0, 0.0, width, height);
       NSMutableAttributedString *attachmentStr = [NSMutableAttributedString new];
@@ -294,7 +290,7 @@ static css_dim_t RCTMeasure(void *context, float width, css_measure_mode_t width
       [attachmentStr addAttribute:RCTShadowViewAttributeName value:child range:NSMakeRange(0, [attachmentStr length])];
       [attributedString appendAttributedString:attachmentStr];
       if (height > heightOfTallestSubview) {
-//        heightOfTallestSubview = height;
+        heightOfTallestSubview = height;
       }
       // Don't call setTextComputed on this child. RCTTextManager takes care of
       // processing inline UIViews.

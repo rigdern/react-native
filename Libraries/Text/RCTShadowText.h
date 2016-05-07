@@ -37,6 +37,7 @@ extern NSString *const RCTReactTagAttributeName;
 @property (nonatomic, assign) CGFloat textShadowRadius;
 @property (nonatomic, strong) UIColor *textShadowColor;
 
+- (instancetype)initWithBridge:(RCTBridge *)bridge NS_DESIGNATED_INITIALIZER;
 - (void)recomputeText;
 
 @end

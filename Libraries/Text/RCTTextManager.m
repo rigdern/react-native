@@ -50,7 +50,7 @@ RCT_EXPORT_MODULE()
 
 - (RCTShadowView *)shadowView
 {
-  return [RCTShadowText new];
+  return [[RCTShadowText alloc] initWithBridge:self.bridge];
 }
 
 #pragma mark - Shadow properties
