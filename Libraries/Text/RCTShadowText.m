@@ -18,6 +18,7 @@
 #import "RCTShadowRawText.h"
 #import "RCTText.h"
 #import "RCTUtils.h"
+#import "RCTImageLoader.h"
 
 NSString *const RCTShadowViewAttributeName = @"RCTShadowViewAttributeName";
 NSString *const RCTIsHighlightedAttributeName = @"IsHighlightedAttributeName";
@@ -30,6 +31,8 @@ NSString *const RCTReactTagAttributeName = @"ReactTagAttributeName";
   CGFloat _cachedTextStorageWidthMode;
   NSAttributedString *_cachedAttributedString;
   CGFloat _effectiveLetterSpacing;
+  
+  RCTBridge *_bridge;
 }
 
 static css_dim_t RCTMeasure(void *context, float width, css_measure_mode_t widthMode, float height, css_measure_mode_t heightMode)
@@ -64,6 +67,14 @@ static css_dim_t RCTMeasure(void *context, float width, css_measure_mode_t width
                                              selector:@selector(contentSizeMultiplierDidChange:)
                                                  name:RCTUIManagerWillUpdateViewsDueToContentSizeMultiplierChangeNotification
                                                object:nil];
+  }
+  return self;
+}
+
+- (instancetype)initWithBridge:(RCTBridge *)bridge
+{
+  if ((self = [self init])) {
+    _bridge = bridge;
   }
   return self;
 }
@@ -269,13 +280,21 @@ static css_dim_t RCTMeasure(void *context, float width, css_measure_mode_t width
         RCTLogError(@"Views nested within a <Text> must have a width and height");
       }
       NSTextAttachment *attachment = [NSTextAttachment new];
+      [_bridge.imageLoader loadImageWithTag:@"http://localhost:8081/assets/Examples/UIExplorer/flux@3x.png?platform=ios&hash=1eb7957eaac4003848330d4f37d153bc"
+                                       size:CGSizeMake(width, height)
+                                      scale:RCTScreenScale()
+                                 resizeMode:RCTResizeModeCover
+                              progressBlock:nil
+                            completionBlock:^(NSError *error, UIImage *image) {
+                              attachment.image = image;
+                            }];
       attachment.bounds = CGRectMake(0.0, 0.0, width, height);
       NSMutableAttributedString *attachmentStr = [NSMutableAttributedString new];
       [attachmentStr appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
       [attachmentStr addAttribute:RCTShadowViewAttributeName value:child range:NSMakeRange(0, [attachmentStr length])];
       [attributedString appendAttributedString:attachmentStr];
       if (height > heightOfTallestSubview) {
-        heightOfTallestSubview = height;
+//        heightOfTallestSubview = height;
       }
       // Don't call setTextComputed on this child. RCTTextManager takes care of
       // processing inline UIViews.

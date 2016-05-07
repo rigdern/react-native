@@ -136,9 +136,9 @@ void collectNonTextDescendants(RCTText *view, NSMutableArray *nonTextDescendants
   }
   NSMutableArray *nonTextDescendants = [NSMutableArray new];
   collectNonTextDescendants(self, nonTextDescendants);
-  for (UIView *child in nonTextDescendants) {
-    [self addSubview:child];
-  }
+//  for (UIView *child in nonTextDescendants) {
+//    [self addSubview:child];
+//  }
 }
 
 - (NSNumber *)reactTagAtPoint:(CGPoint)point
