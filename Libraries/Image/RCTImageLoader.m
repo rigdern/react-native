@@ -180,7 +180,7 @@ RCT_EXPORT_MODULE()
   return nil;
 }
 
-static UIImage *RCTResizeImageIfNeeded(UIImage *image,
+UIImage *RCTResizeImageIfNeeded(UIImage *image,
                                        CGSize size,
                                        CGFloat scale,
                                        RCTResizeMode resizeMode)

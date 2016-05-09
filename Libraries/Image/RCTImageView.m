@@ -20,6 +20,8 @@
 
 #import "UIView+React.h"
 
+//static int ahcCounter;
+
 /**
  * Determines whether an image of `currentSize` should be reloaded for display
  * at `idealSize`.
@@ -62,6 +64,28 @@ static BOOL RCTShouldReloadImageForSizeChange(CGSize currentSize, CGSize idealSi
 {
   if ((self = [super init])) {
     _bridge = bridge;
+    
+//    if (_onLoadStart) {
+//      _onLoadStart(nil);
+//    }
+//    
+//    [self.layer removeAnimationForKey:@"contents"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"ahc-100.png"];
+    self.image = [UIImage imageWithContentsOfFile:filePath];
+    
+//    self.backgroundColor = [UIColor blackColor];
+    
+//    self.image = RCTResizeImageIfNeeded([UIImage imageWithContentsOfFile:filePath],
+//                                        CGSizeMake(30, 11),
+//                                        2.0,
+//                                        RCTResizeModeCover);
+//    if (_onLoad) {
+//      _onLoad(nil);
+//    }
+//    if (_onLoadEnd) {
+//      _onLoadEnd(nil);
+//    }
   }
   return self;
 }
@@ -169,7 +193,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   [self cancelImageLoad];
   [self.layer removeAnimationForKey:@"contents"];
-  self.image = nil;
+//  self.image = nil;
 }
 
 - (void)reloadImage
@@ -202,7 +226,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     RCTImageSource *source = _source;
     CGFloat blurRadius = _blurRadius;
     __weak RCTImageView *weakSelf = self;
-    _reloadImageCancellationBlock = [_bridge.imageLoader loadImageWithoutClipping:_source.imageURL.absoluteString
+    _reloadImageCancellationBlock = [_bridge.imageLoader loadImageWithTag:_source.imageURL.absoluteString
                                                                              size:imageSize
                                                                             scale:imageScale
                                                                        resizeMode:(RCTResizeMode)self.contentMode
@@ -222,7 +246,15 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
           [strongSelf.layer addAnimation:image.reactKeyframeAnimation forKey:@"contents"];
         } else {
           [strongSelf.layer removeAnimationForKey:@"contents"];
-          strongSelf.image = image;
+//          // Create path.
+//          NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//          NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"ahc-image%d.png", ahcCounter++]];
+//          
+//          // Save image.
+//          [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES];
+//          NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//          NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"ahc-image1.png"];
+//          strongSelf.image = [UIImage imageWithContentsOfFile:filePath];
         }
         if (error) {
           if (strongSelf->_onError) {

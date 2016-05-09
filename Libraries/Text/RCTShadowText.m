@@ -20,6 +20,8 @@
 #import "RCTUtils.h"
 #import "RCTImageLoader.h"
 
+//static int ahcCounter;
+
 NSString *const RCTShadowViewAttributeName = @"RCTShadowViewAttributeName";
 NSString *const RCTIsHighlightedAttributeName = @"IsHighlightedAttributeName";
 NSString *const RCTReactTagAttributeName = @"ReactTagAttributeName";
@@ -134,16 +136,19 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   NSRange characterRange = [layoutManager characterRangeForGlyphRange:glyphRange actualGlyphRange:NULL];
   [layoutManager.textStorage enumerateAttribute:RCTShadowViewAttributeName inRange:characterRange options:0 usingBlock:^(RCTShadowView *child, NSRange range, BOOL *_) {
     if (child != nil) {
-      css_node_t *childNode = child.cssNode;
-      float width = childNode->style.dimensions[CSS_WIDTH];
-      float height = childNode->style.dimensions[CSS_HEIGHT];
+//      css_node_t *childNode = child.cssNode;
+      float width = 100; //childNode->style.dimensions[CSS_WIDTH];
+      float height = 100; //childNode->style.dimensions[CSS_HEIGHT];
       if (isUndefined(width) || isUndefined(height)) {
         RCTLogError(@"Views nested within a <Text> must have a width and height");
       }
-      CGPoint childOrigin = [layoutManager boundingRectForGlyphRange:range inTextContainer:textContainer].origin;
+      
+      UIFont* font = [textStorage attribute:NSFontAttributeName atIndex:range.location effectiveRange:nil];
+      CGRect glyphRect = [layoutManager boundingRectForGlyphRange:range inTextContainer:textContainer];
+      CGPoint childOrigin = glyphRect.origin;
       CGRect childFrame = {{
         RCTRoundPixelValue(childOrigin.x),
-        RCTRoundPixelValue(childOrigin.y)
+        childOrigin.y + glyphRect.size.height - height + font.descender
       }, {
         RCTRoundPixelValue(width),
         RCTRoundPixelValue(height)
@@ -270,20 +275,31 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:shadowRawText.text ?: @""]];
       [child setTextComputed];
     } else {
-      float width = child.cssNode->style.dimensions[CSS_WIDTH];
-      float height = child.cssNode->style.dimensions[CSS_HEIGHT];
+      float width = 100; //child.cssNode->style.dimensions[CSS_WIDTH];
+      float height = 100; //child.cssNode->style.dimensions[CSS_HEIGHT];
       if (isUndefined(width) || isUndefined(height)) {
         RCTLogError(@"Views nested within a <Text> must have a width and height");
       }
       NSTextAttachment *attachment = [NSTextAttachment new];
-      [_bridge.imageLoader loadImageWithTag:@"http://localhost:8081/assets/Examples/UIExplorer/flux@3x.png?platform=ios&hash=1eb7957eaac4003848330d4f37d153bc"
-                                       size:CGSizeMake(width, height)
-                                      scale:RCTScreenScale()
-                                 resizeMode:RCTResizeModeCover
-                              progressBlock:nil
-                            completionBlock:^(NSError *error, UIImage *image) {
+//      [_bridge.imageLoader loadImageWithTag:@"http://localhost:8081/assets/Examples/UIExplorer/flux@3x.png?platform=ios&hash=1eb7957eaac4003848330d4f37d153bc"
+//                                       size:CGSizeMake(width, height)
+//                                      scale:RCTScreenScale()
+//                                 resizeMode:RCTResizeModeCover
+//                              progressBlock:nil
+//                            completionBlock:^(NSError *error, UIImage *image) {
+//                              // Create path.
+//                              NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//                              NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"ahc-virtual-image%d.png", ahcCounter]];
+//                              
+//                              // Save image.
+//                              [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES];
 //                              attachment.image = image;
-                            }];
+//                            }];
+      
+      NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+      NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"ahc-100.png"];
+      attachment.image = [UIImage imageWithContentsOfFile:filePath];
+      
       attachment.bounds = CGRectMake(0.0, 0.0, width, height);
       NSMutableAttributedString *attachmentStr = [NSMutableAttributedString new];
       [attachmentStr appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];

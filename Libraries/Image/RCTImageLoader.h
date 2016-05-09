@@ -15,6 +15,11 @@
 
 @class ALAssetsLibrary;
 
+UIImage *RCTResizeImageIfNeeded(UIImage *image,
+                                CGSize size,
+                                CGFloat scale,
+                                RCTResizeMode resizeMode);
+
 typedef void (^RCTImageLoaderProgressBlock)(int64_t progress, int64_t total);
 typedef void (^RCTImageLoaderCompletionBlock)(NSError *error, UIImage *image);
 typedef void (^RCTImageLoaderCancellationBlock)(void);
