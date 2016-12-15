@@ -39,6 +39,7 @@ class Dimensions {
         height: windowPhysicalPixels.height / windowPhysicalPixels.scale,
         scale: windowPhysicalPixels.scale,
         fontScale: windowPhysicalPixels.fontScale,
+        fontScaleOld: windowPhysicalPixels.fontScaleOld,
       };
       if (Platform.OS === 'android') {
         // Screen and window dimensions are different on android
@@ -48,6 +49,7 @@ class Dimensions {
           height: screenPhysicalPixels.height / screenPhysicalPixels.scale,
           scale: screenPhysicalPixels.scale,
           fontScale: screenPhysicalPixels.fontScale,
+          fontScaleOld: screenPhysicalPixels.fontScaleOld,
         };
 
         // delete so no callers rely on this existing

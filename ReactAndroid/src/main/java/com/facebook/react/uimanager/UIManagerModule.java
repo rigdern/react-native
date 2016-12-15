@@ -19,6 +19,7 @@ import android.content.ComponentCallbacks2;
 import android.content.res.Configuration;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.react.ReactApplication;
 import com.facebook.react.animation.Animation;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -99,7 +100,7 @@ public class UIManagerModule extends ReactContextBaseJavaModule implements
     super(reactContext);
     DisplayMetricsHolder.initDisplayMetricsIfNotInitialized(reactContext);
     mEventDispatcher = new EventDispatcher(reactContext);
-    mModuleConstants = createConstants(viewManagerList, lazyViewManagersEnabled);
+    mModuleConstants = createConstants(viewManagerList, lazyViewManagersEnabled, getReactApplicationContext());
     mUIImplementation = uiImplementationProvider
       .createUIImplementation(reactContext, viewManagerList, mEventDispatcher);
 
@@ -155,13 +156,15 @@ public class UIManagerModule extends ReactContextBaseJavaModule implements
 
   private static Map<String, Object> createConstants(
     List<ViewManager> viewManagerList,
-    boolean lazyViewManagersEnabled) {
+    boolean lazyViewManagersEnabled,
+    ReactApplicationContext reactApplicationContext) {
     ReactMarker.logMarker(CREATE_UI_MANAGER_MODULE_CONSTANTS_START);
     Systrace.beginSection(Systrace.TRACE_TAG_REACT_JAVA_BRIDGE, "CreateUIManagerConstants");
     try {
       return UIManagerModuleConstantsHelper.createConstants(
         viewManagerList,
-        lazyViewManagersEnabled);
+        lazyViewManagersEnabled,
+        reactApplicationContext);
     } finally {
       Systrace.endSection(Systrace.TRACE_TAG_REACT_JAVA_BRIDGE);
       ReactMarker.logMarker(CREATE_UI_MANAGER_MODULE_CONSTANTS_END);
