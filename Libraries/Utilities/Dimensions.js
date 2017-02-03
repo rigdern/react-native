@@ -62,6 +62,9 @@ class Dimensions {
     }
 
     Object.assign(dimensions, dims);
+    if (!dimensions.screen) {
+      dimensions.screen = dimensions.window;
+    }
   }
 
   /**
@@ -88,6 +91,10 @@ class Dimensions {
 Dimensions.set(UIManager.Dimensions);
 RCTDeviceEventEmitter.addListener('didUpdateDimensions', function(update) {
   Dimensions.set(update);
+});
+RCTDeviceEventEmitter.addListener('didUpdateFontScale', function(update) {
+  dimensions.window.fontScale = update.fontScale;
+  dimensions.screen.fontScale = update.fontScale;
 });
 
 module.exports = Dimensions;

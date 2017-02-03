@@ -21,6 +21,7 @@ import android.content.res.Configuration;
 import com.facebook.common.logging.FLog;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.animation.Animation;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.NativeModuleLogger;
@@ -32,8 +33,10 @@ import com.facebook.react.bridge.ReactMarker;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.ReactConstants;
 import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.uimanager.debug.NotThreadSafeViewHierarchyUpdateDebugListener;
 import com.facebook.react.uimanager.events.EventDispatcher;
 import com.facebook.systrace.Systrace;
@@ -88,6 +91,7 @@ public class UIManagerModule extends ReactContextBaseJavaModule implements
   private final Map<String, Object> mModuleConstants;
   private final UIImplementation mUIImplementation;
   private final MemoryTrimCallback mMemoryTrimCallback = new MemoryTrimCallback();
+  private float mFontScale;
 
   private int mNextRootViewTag = 1;
   private int mBatchId = 0;
@@ -103,6 +107,7 @@ public class UIManagerModule extends ReactContextBaseJavaModule implements
     mModuleConstants = createConstants(viewManagerList, lazyViewManagersEnabled, getReactApplicationContext());
     mUIImplementation = uiImplementationProvider
       .createUIImplementation(reactContext, viewManagerList, mEventDispatcher);
+    mFontScale = getReactApplicationContext().getResources().getConfiguration().fontScale;
 
     reactContext.addLifecycleEventListener(this);
   }
@@ -546,6 +551,26 @@ public class UIManagerModule extends ReactContextBaseJavaModule implements
   @ReactMethod
   public void sendAccessibilityEvent(int tag, int eventType) {
     mUIImplementation.sendAccessibilityEvent(tag, eventType);
+  }
+
+  // Called whenever the ReactActivity is created. Android destroys and recreates the
+  // ReactActivity when various config options change. This is a good hook to detect those
+  // config changes and take appropriate action.
+  public void onCreate()
+  {
+    float fontScale = getReactApplicationContext().getResources().getConfiguration().fontScale;
+    if (fontScale != mFontScale) {
+      mFontScale = fontScale;
+      WritableMap fontScaleMap = Arguments.createMap();
+      fontScaleMap.putDouble("fontScale", fontScale);
+      sendEvent("didUpdateFontScale", fontScaleMap);
+    }
+  }
+
+  private void sendEvent(String eventName, @Nullable WritableMap params) {
+    getReactApplicationContext()
+        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+        .emit(eventName, params);
   }
 
   /**
