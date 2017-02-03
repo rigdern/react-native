@@ -45,7 +45,7 @@ import static com.facebook.systrace.Systrace.TRACE_TAG_REACT_JAVA_BRIDGE;
     List<ViewManager> viewManagers,
     boolean lazyViewManagersEnabled,
     ReactApplicationContext reactApplicationContext) {
-    Map<String, Object> constants = UIManagerModuleConstants.getConstants();
+    Map<String, Object> constants = UIManagerModuleConstants.getConstants(reactApplicationContext);
     Map bubblingEventTypesConstants = UIManagerModuleConstants.getBubblingEventTypeConstants();
     Map directEventTypesConstants = UIManagerModuleConstants.getDirectEventTypeConstants();
 

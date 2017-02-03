@@ -84,6 +84,7 @@ import com.facebook.react.uimanager.events.TouchEventType;
   }
 
   public static Map<String, Object> getConstants(ReactApplicationContext reactApplicationContext) {
+    float fontScale = reactApplicationContext.getResources().getConfiguration().fontScale;
     HashMap<String, Object> constants = new HashMap<String, Object>();
     constants.put(
         "UIView",
@@ -111,7 +112,7 @@ import com.facebook.react.uimanager.events.TouchEventType;
                 "scale",
                 displayMetrics.density,
                 "fontScale",
-                displayMetrics.scaledDensity / displayMetrics.density,
+                fontScale,
                 "fontScaleOld",
                 displayMetrics.scaledDensity,
                 "densityDpi",
@@ -125,7 +126,7 @@ import com.facebook.react.uimanager.events.TouchEventType;
             "scale",
             screenDisplayMetrics.density,
             "fontScale",
-            screenDisplayMetrics.scaledDensity / screenDisplayMetrics.density,
+            fontScale,
             "fontScaleOld",
             screenDisplayMetrics.scaledDensity,
             "densityDpi",
