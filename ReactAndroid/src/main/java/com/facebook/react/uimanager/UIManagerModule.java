@@ -17,6 +17,7 @@ import java.util.Map;
 
 import android.content.ComponentCallbacks2;
 import android.content.res.Configuration;
+import android.util.DisplayMetrics;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.react.ReactApplication;
@@ -104,10 +105,10 @@ public class UIManagerModule extends ReactContextBaseJavaModule implements
     super(reactContext);
     DisplayMetricsHolder.initDisplayMetricsIfNotInitialized(reactContext);
     mEventDispatcher = new EventDispatcher(reactContext);
-    mModuleConstants = createConstants(viewManagerList, lazyViewManagersEnabled, getReactApplicationContext());
+    mFontScale = getReactApplicationContext().getResources().getConfiguration().fontScale;
+    mModuleConstants = createConstants(viewManagerList, lazyViewManagersEnabled, mFontScale);
     mUIImplementation = uiImplementationProvider
       .createUIImplementation(reactContext, viewManagerList, mEventDispatcher);
-    mFontScale = getReactApplicationContext().getResources().getConfiguration().fontScale;
 
     reactContext.addLifecycleEventListener(this);
   }
@@ -138,6 +139,10 @@ public class UIManagerModule extends ReactContextBaseJavaModule implements
   @Override
   public void onHostResume() {
     mUIImplementation.onHostResume();
+
+    if (mFontScale != getReactApplicationContext().getResources().getConfiguration().fontScale) {
+      emitUpdateDimensionsEvent();
+    }
   }
 
   @Override
@@ -162,14 +167,14 @@ public class UIManagerModule extends ReactContextBaseJavaModule implements
   private static Map<String, Object> createConstants(
     List<ViewManager> viewManagerList,
     boolean lazyViewManagersEnabled,
-    ReactApplicationContext reactApplicationContext) {
+    float fontScale) {
     ReactMarker.logMarker(CREATE_UI_MANAGER_MODULE_CONSTANTS_START);
     Systrace.beginSection(Systrace.TRACE_TAG_REACT_JAVA_BRIDGE, "CreateUIManagerConstants");
     try {
       return UIManagerModuleConstantsHelper.createConstants(
         viewManagerList,
         lazyViewManagersEnabled,
-        reactApplicationContext);
+        fontScale);
     } finally {
       Systrace.endSection(Systrace.TRACE_TAG_REACT_JAVA_BRIDGE);
       ReactMarker.logMarker(CREATE_UI_MANAGER_MODULE_CONSTANTS_END);
@@ -553,18 +558,29 @@ public class UIManagerModule extends ReactContextBaseJavaModule implements
     mUIImplementation.sendAccessibilityEvent(tag, eventType);
   }
 
-  // Called whenever the ReactActivity is created. Android destroys and recreates the
-  // ReactActivity when various config options change. This is a good hook to detect those
-  // config changes and take appropriate action.
-  public void onCreate()
-  {
-    float fontScale = getReactApplicationContext().getResources().getConfiguration().fontScale;
-    if (fontScale != mFontScale) {
-      mFontScale = fontScale;
-      WritableMap fontScaleMap = Arguments.createMap();
-      fontScaleMap.putDouble("fontScale", fontScale);
-      sendEvent("didUpdateFontScale", fontScaleMap);
-    }
+  public void emitUpdateDimensionsEvent() {
+    mFontScale = getReactApplicationContext().getResources().getConfiguration().fontScale;
+    DisplayMetrics windowDisplayMetrics = DisplayMetricsHolder.getWindowDisplayMetrics();
+    DisplayMetrics screenDisplayMetrics = DisplayMetricsHolder.getScreenDisplayMetrics();
+
+    WritableMap windowDisplayMetricsMap = Arguments.createMap();
+    windowDisplayMetricsMap.putInt("width", windowDisplayMetrics.widthPixels);
+    windowDisplayMetricsMap.putInt("height", windowDisplayMetrics.heightPixels);
+    windowDisplayMetricsMap.putDouble("scale", windowDisplayMetrics.density);
+    windowDisplayMetricsMap.putDouble("fontScale", mFontScale);
+    windowDisplayMetricsMap.putDouble("densityDpi", windowDisplayMetrics.densityDpi);
+
+    WritableMap screenDisplayMetricsMap = Arguments.createMap();
+    screenDisplayMetricsMap.putInt("width", screenDisplayMetrics.widthPixels);
+    screenDisplayMetricsMap.putInt("height", screenDisplayMetrics.heightPixels);
+    screenDisplayMetricsMap.putDouble("scale", screenDisplayMetrics.density);
+    screenDisplayMetricsMap.putDouble("fontScale", mFontScale);
+    screenDisplayMetricsMap.putDouble("densityDpi", screenDisplayMetrics.densityDpi);
+
+    WritableMap dimensionsMap = Arguments.createMap();
+    dimensionsMap.putMap("windowPhysicalPixels", windowDisplayMetricsMap);
+    dimensionsMap.putMap("screenPhysicalPixels", screenDisplayMetricsMap);
+    sendEvent("didUpdateDimensions", dimensionsMap);
   }
 
   private void sendEvent(String eventName, @Nullable WritableMap params) {

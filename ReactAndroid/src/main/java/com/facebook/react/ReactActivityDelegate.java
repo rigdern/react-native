@@ -17,13 +17,10 @@ import android.widget.Toast;
 import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.bridge.Callback;
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.common.ReactConstants;
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer;
-import com.facebook.react.devsupport.ReactInstanceDevCommandsHandler;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionListener;
-import com.facebook.react.uimanager.UIManagerModule;
 
 import javax.annotation.Nullable;
 
@@ -96,14 +93,6 @@ public class ReactActivityDelegate {
         FLog.w(ReactConstants.TAG, REDBOX_PERMISSION_MESSAGE);
         Toast.makeText(getContext(), REDBOX_PERMISSION_MESSAGE, Toast.LENGTH_LONG).show();
         ((Activity) getContext()).startActivityForResult(serviceIntent, REQUEST_OVERLAY_PERMISSION_CODE);
-      }
-    }
-
-    ReactInstanceManager reactInstanceManager = getReactInstanceManager();
-    if (reactInstanceManager != null) {
-      ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
-      if (reactContext != null) {
-        reactContext.getNativeModule(UIManagerModule.class).onCreate();
       }
     }
 

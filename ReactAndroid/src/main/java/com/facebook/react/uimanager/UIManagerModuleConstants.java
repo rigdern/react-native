@@ -83,8 +83,7 @@ import com.facebook.react.uimanager.events.TouchEventType;
         .build();
   }
 
-  public static Map<String, Object> getConstants(ReactApplicationContext reactApplicationContext) {
-    float fontScale = reactApplicationContext.getResources().getConfiguration().fontScale;
+  public static Map<String, Object> getConstants(float fontScale) {
     HashMap<String, Object> constants = new HashMap<String, Object>();
     constants.put(
         "UIView",
