@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.react.devsupport;
+package com.facebook.react.devsupport.interfaces;
 
 import javax.annotation.Nullable;
 
@@ -46,7 +46,7 @@ public interface DevSupportManager extends NativeModuleCallExceptionHandler {
   void reloadSettings();
   void handleReloadJS();
   void reloadJSFromServer(final String bundleURL);
-  void isPackagerRunning(DevServerHelper.PackagerStatusCallback callback);
+  void isPackagerRunning(PackagerStatusCallback callback);
   @Nullable File downloadBundleResourceFromUrlSync(
       final String resourceURL,
       final File outputFile);

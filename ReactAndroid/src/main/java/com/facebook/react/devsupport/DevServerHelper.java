@@ -26,6 +26,7 @@ import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.common.ReactConstants;
 import com.facebook.react.common.network.OkHttpCallUtil;
+import com.facebook.react.devsupport.interfaces.PackagerStatusCallback;
 import com.facebook.react.modules.systeminfo.AndroidInfoHelpers;
 
 import okhttp3.Call;
@@ -86,10 +87,6 @@ public class DevServerHelper {
     void onPackagerReloadCommand();
     void onCaptureHeapCommand();
     void onPokeSamplingProfilerCommand(@Nullable final WebSocket webSocket);
-  }
-
-  public interface PackagerStatusCallback {
-    void onPackagerStatusFetched(boolean packagerIsRunning);
   }
 
   private final DevInternalSettings mSettings;
