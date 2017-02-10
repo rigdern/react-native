@@ -19,7 +19,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.devsupport.interfaces.DevOptionHandler;
 import com.facebook.react.devsupport.interfaces.DevSupportManager;
 import com.facebook.react.devsupport.interfaces.PackagerStatusCallback;
-import com.facebook.react.devsupport.StackTraceHelper.StackFrame;
+import com.facebook.react.devsupport.interfaces.StackFrame;
 import com.facebook.react.modules.debug.DeveloperSettings;
 
 /**
