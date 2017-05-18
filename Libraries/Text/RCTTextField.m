@@ -55,6 +55,19 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   return _backedTextInput;
 }
 
+- (void)updateFont
+{
+  CGFloat scaleMultiplier = _allowFontScaling ? _fontSizeMultiplier : 1.0;
+  
+  self._backedTextInput.font = [RCTFont updateFont:nil
+                                        withFamily:self.fontFamily
+                                              size:self.fontSize
+                                            weight:self.fontWeight
+                                            style:self.fontStyle
+                                          variant:nil
+                                  scaleMultiplier:scaleMultiplier];
+}
+
 - (void)sendKeyValueForString:(NSString *)string
 {
   [_eventDispatcher sendTextEventWithType:RCTTextEventTypeKeyPress
