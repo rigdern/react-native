@@ -254,6 +254,18 @@ const ScrollView = createReactClass({
      */
     onScroll: PropTypes.func,
     /**
+     * Fires to indicate that a previously requested scroll position (e.g. through scrollTo, scrollEnd)
+     * has been set by the native code. How do you know which scroll request this is associated with?
+     * When you call a scroll method to adjust the scroll position, it returns an id and later an
+     * `onScrollPositionSet` event will fire with an event object that contains an `id` property
+     * which matches that id.
+     * 
+     * This event is useful if you'd like to ignore `onScroll` events that occur between the time you
+     * set a scroll position in JavaScript and the time that the native code sets that scroll position
+     * on the ScrollView.
+     */
+    onScrollPositionSet: PropTypes.func,
+    /**
      * Called when scrollable content view of the ScrollView changes.
      *
      * Handler function is passed the content width and content height as parameters:
@@ -485,6 +497,9 @@ const ScrollView = createReactClass({
     return ReactNative.findNodeHandle(this._innerViewRef);
   },
 
+  // The id that will be associated with the next call to scrollTo, scrollToEnd, etc.
+  _nextScrollRequestId: 1,
+
   /**
    * Scrolls to a given x, y offset, either immediately or with a smooth animation.
    *
@@ -500,16 +515,23 @@ const ScrollView = createReactClass({
     y?: number | { x?: number, y?: number, animated?: boolean },
     x?: number,
     animated?: boolean
-  ) {
+  ): number {
     if (typeof y === 'number') {
       console.warn('`scrollTo(y, x, animated)` is deprecated. Use `scrollTo({x: 5, y: 5, ' +
         'animated: true})` instead.');
     } else {
       ({x, y, animated} = y || {});
     }
-    this.getScrollResponder().scrollResponderScrollTo(
-      {x: x || 0, y: y || 0, animated: animated !== false}
-    );
+
+    const scrollRequestId = this._nextScrollRequestId++;
+    this.getScrollResponder().scrollResponderScrollTo({
+      x: x || 0,
+      y: y || 0,
+      animated: animated !== false,
+      id: scrollRequestId,
+    });
+
+    return scrollRequestId;
   },
 
   /**
@@ -522,12 +544,15 @@ const ScrollView = createReactClass({
    */
   scrollToEnd: function(
     options?: { animated?: boolean },
-  ) {
+  ): number {
     // Default to true
     const animated = (options && options.animated) !== false;
+    const scrollRequestId = this._nextScrollRequestId++;
     this.getScrollResponder().scrollResponderScrollToEnd({
       animated: animated,
+      id: scrollRequestId,
     });
+    return scrollRequestId;
   },
 
   /**
@@ -537,10 +562,15 @@ const ScrollView = createReactClass({
    *
    * `scrollBy(options: {deltaX: number = 0; deltaY: number = 0; animated: boolean = true})`
    */
-  scrollBy: function(options: { deltaX?: number, deltaY?: number, animated?: boolean } ) {
-    const data = {deltaX: options.deltaX || 0, deltaY: options.deltaY || 0,
-      animated: options.animated !== false};
-    this.getScrollResponder().scrollResponderScrollBy(data);
+  scrollBy: function(options: { deltaX?: number, deltaY?: number, animated?: boolean } ): number {
+    const scrollRequestId = this._nextScrollRequestId++;
+    this.getScrollResponder().scrollResponderScrollBy({
+      deltaX: options.deltaX || 0,
+      deltaY: options.deltaY || 0,
+      animated: options.animated !== false,
+      id: scrollRequestId,
+    });
+    return scrollRequestId;
   },
 
   /**
@@ -626,7 +656,12 @@ const ScrollView = createReactClass({
         dismissKeyboard();
       }
     }
+
     this.scrollResponderHandleScroll(e);
+  },
+
+  _handleScrollPositionSet: function(e: Object) {
+    this.props.onScrollPositionSet && this.props.onScrollPositionSet(e);
   },
 
   _handleContentOnLayout: function(e: Object) {
@@ -776,6 +811,7 @@ const ScrollView = createReactClass({
       onTouchEnd: this.scrollResponderHandleTouchEnd,
       onTouchMove: this.scrollResponderHandleTouchMove,
       onTouchStart: this.scrollResponderHandleTouchStart,
+      onScrollPositionSet: this._handleScrollPositionSet,
       scrollEventThrottle: hasStickyHeaders ? 1 : this.props.scrollEventThrottle,
       sendMomentumEvents: (this.props.onMomentumScrollBegin || this.props.onMomentumScrollEnd) ?
         true : false,

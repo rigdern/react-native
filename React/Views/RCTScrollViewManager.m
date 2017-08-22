@@ -89,6 +89,7 @@ RCT_EXPORT_VIEW_PROPERTY(onScroll, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onScrollEndDrag, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onMomentumScrollBegin, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onMomentumScrollEnd, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onScrollPositionSet, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(DEPRECATED_sendUpdatedChildFrames, BOOL)
 #if defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000 /* __IPHONE_11_0 */
 RCT_EXPORT_VIEW_PROPERTY(contentInsetAdjustmentBehavior, UIScrollViewContentInsetAdjustmentBehavior)
@@ -146,13 +147,14 @@ RCT_EXPORT_METHOD(calculateChildFrames:(nonnull NSNumber *)reactTag
 RCT_EXPORT_METHOD(scrollTo:(nonnull NSNumber *)reactTag
                   offsetX:(CGFloat)x
                   offsetY:(CGFloat)y
-                  animated:(BOOL)animated)
+                  animated:(BOOL)animated
+                  scrollId:(nonnull NSNumber *)scrollId)
 {
   [self.bridge.uiManager addUIBlock:
    ^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry){
     UIView *view = viewRegistry[reactTag];
     if ([view conformsToProtocol:@protocol(RCTScrollableProtocol)]) {
-      [(id<RCTScrollableProtocol>)view scrollToOffset:(CGPoint){x, y} animated:animated];
+        [(id<RCTScrollableProtocol>)view scrollToOffset:(CGPoint){x, y} animated:animated scrollId:scrollId];
     } else {
       RCTLogError(@"tried to scrollTo: on non-RCTScrollableProtocol view %@ "
                   "with tag #%@", view, reactTag);
@@ -161,30 +163,32 @@ RCT_EXPORT_METHOD(scrollTo:(nonnull NSNumber *)reactTag
 }
 
 RCT_EXPORT_METHOD(scrollToEnd:(nonnull NSNumber *)reactTag
-                  animated:(BOOL)animated)
+                  animated:(BOOL)animated
+                  scrollId:(nonnull NSNumber *)scrollId)
 {
   [self.bridge.uiManager addUIBlock:
    ^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry){
      UIView *view = viewRegistry[reactTag];
      if ([view conformsToProtocol:@protocol(RCTScrollableProtocol)]) {
-       [(id<RCTScrollableProtocol>)view scrollToEnd:animated];
+       [(id<RCTScrollableProtocol>)view scrollToEnd:animated scrollId:scrollId];
      } else {
        RCTLogError(@"tried to scrollTo: on non-RCTScrollableProtocol view %@ "
-                   "with tag #%@", view, reactTag);
-     }
-   }];
+                         "with tag #%@", view, reactTag);
+         }
+     }];
 }
 
 RCT_EXPORT_METHOD(scrollBy:(nonnull NSNumber *)reactTag
                   deltaX:(CGFloat)deltaX
                   deltaY:(CGFloat)deltaY
-                  animated:(BOOL)animated)
+                  animated:(BOOL)animated
+                  scrollId:(nonnull NSNumber *)scrollId)
 {
   [self.bridge.uiManager addUIBlock:
    ^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry){
      UIView *view = viewRegistry[reactTag];
      if ([view conformsToProtocol:@protocol(RCTScrollableProtocol)]) {
-       [(id<RCTScrollableProtocol>)view scrollByOffset:(CGPoint){deltaX, deltaY} animated:animated];
+       [(id<RCTScrollableProtocol>)view scrollByOffset:(CGPoint){deltaX, deltaY} animated:animated scrollId:scrollId];
      } else {
        RCTLogError(@"tried to scrollBy: on non-RCTScrollableProtocol view %@ "
                    "with tag #%@", view, reactTag);

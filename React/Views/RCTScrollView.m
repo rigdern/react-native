@@ -551,25 +551,30 @@ static inline void RCTApplyTranformationAccordingLayoutDirection(UIView *view, U
   return scrollView.contentSize.width > self.frame.size.width;
 }
 
-- (void)scrollToOffset:(CGPoint)offset
-{
-  [self scrollToOffset:offset animated:YES];
+#define RCT_SEND_SCROLL_EVENT(_eventName, _userData) { \
+  NSString *eventName = NSStringFromSelector(@selector(_eventName)); \
+  [self sendScrollEventWithName:eventName scrollView:_scrollView userData:_userData]; \
 }
 
-- (void)scrollToOffset:(CGPoint)offset animated:(BOOL)animated
+- (void)scrollToOffset:(CGPoint)offset animated:(BOOL)animated scrollId:(nonnull NSNumber *)scrollId
 {
   if (!CGPointEqualToPoint(_scrollView.contentOffset, offset)) {
     // Ensure at least one scroll event will fire
     _allowNextScrollNoMatterWhat = YES;
     [_scrollView setContentOffset:offset animated:animated];
   }
+  
+  NSDictionary *userData = @{
+                             @"id": scrollId
+                             };
+  RCT_SEND_SCROLL_EVENT(onScrollPositionSet, userData);
 }
 
 /**
  * If this is a vertical scroll view, scrolls to the bottom.
  * If this is a horizontal scroll view, scrolls to the right.
  */
-- (void)scrollToEnd:(BOOL)animated
+- (void)scrollToEnd:(BOOL)animated scrollId:(nonnull NSNumber *)scrollId
 {
   BOOL isHorizontal = [self isHorizontal:_scrollView];
   CGPoint offset;
@@ -585,9 +590,14 @@ static inline void RCTApplyTranformationAccordingLayoutDirection(UIView *view, U
     _allowNextScrollNoMatterWhat = YES;
     [_scrollView setContentOffset:offset animated:animated];
   }
+  
+  NSDictionary *userData = @{
+                             @"id": scrollId
+                             };
+  RCT_SEND_SCROLL_EVENT(onScrollPositionSet, userData);
 }
 
-- (void)scrollByOffset:(CGPoint)offset animated:(BOOL)animated
+- (void)scrollByOffset:(CGPoint)offset animated:(BOOL)animated scrollId:(nonnull NSNumber *)scrollId
 {
   if (offset.x != 0 || offset.y != 0) {
     // Ensure at least one scroll event will fire
@@ -596,6 +606,11 @@ static inline void RCTApplyTranformationAccordingLayoutDirection(UIView *view, U
     CGPoint newOffset = (CGPoint){oldOffset.x + offset.x, oldOffset.y + offset.y};
     [_scrollView setContentOffset:newOffset animated:animated];
   }
+  
+  NSDictionary *userData = @{
+                             @"id": scrollId
+                             };
+  RCT_SEND_SCROLL_EVENT(onScrollPositionSet, userData);
 }
 
 - (void)zoomToRect:(CGRect)rect animated:(BOOL)animated
@@ -611,11 +626,6 @@ static inline void RCTApplyTranformationAccordingLayoutDirection(UIView *view, U
 }
 
 #pragma mark - ScrollView delegate
-
-#define RCT_SEND_SCROLL_EVENT(_eventName, _userData) { \
-  NSString *eventName = NSStringFromSelector(@selector(_eventName)); \
-  [self sendScrollEventWithName:eventName scrollView:_scrollView userData:_userData]; \
-}
 
 #define RCT_FORWARD_SCROLL_EVENT(call) \
 for (NSObject<UIScrollViewDelegate> *scrollViewListener in _scrollListeners) { \

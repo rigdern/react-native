@@ -395,26 +395,27 @@ var ScrollResponderMixin = {
    * This is currently used to help focus child TextViews, but can also
    * be used to quickly scroll to any element we want to focus. Syntax:
    *
-   * `scrollResponderScrollTo(options: {x: number = 0; y: number = 0; animated: boolean = true})`
+   * `scrollResponderScrollTo(options: {x: number = 0; y: number = 0; animated: boolean = true, id: number = 0})`
    *
    * Note: The weird argument signature is due to the fact that, for historical reasons,
    * the function also accepts separate arguments as as alternative to the options object.
    * This is deprecated due to ambiguity (y before x), and SHOULD NOT BE USED.
    */
   scrollResponderScrollTo: function(
-    x?: number | { x?: number, y?: number, animated?: boolean },
+    x?: number | { x?: number, y?: number, animated?: boolean, id?: number},
     y?: number,
-    animated?: boolean
+    animated?: boolean    
   ) {
+    var id;
     if (typeof x === 'number') {
-      console.warn('`scrollResponderScrollTo(x, y, animated)` is deprecated. Use `scrollResponderScrollTo({x: 5, y: 5, animated: true})` instead.');
+      console.warn('`scrollResponderScrollTo(x, y, animated)` is deprecated. Use `scrollResponderScrollTo({x: 5, y: 5, animated: true, id: 1})` instead.');
     } else {
-      ({x, y, animated} = x || {});
+      ({x, y, animated, id} = x || {});
     }
     UIManager.dispatchViewManagerCommand(
       nullthrows(this.scrollResponderGetScrollableNode()),
       UIManager.RCTScrollView.Commands.scrollTo,
-      [x || 0, y || 0, animated !== false],
+      [x || 0, y || 0, animated !== false, id || 0],
     );
   },
 
@@ -427,14 +428,15 @@ var ScrollResponderMixin = {
    * `scrollResponderScrollToEnd({animated: true})`
    */
   scrollResponderScrollToEnd: function(
-    options?: { animated?: boolean },
+    options?: { animated?: boolean, id?: number },
   ) {
     // Default to true
     const animated = (options && options.animated) !== false;
+    const id = (options && options.id) || 0;
     UIManager.dispatchViewManagerCommand(
       this.scrollResponderGetScrollableNode(),
       UIManager.RCTScrollView.Commands.scrollToEnd,
-      [animated],
+      [animated, id],
     );
   },
 
@@ -445,11 +447,11 @@ var ScrollResponderMixin = {
    *
    * scrollResponderScrollBy(options: {deltaX: number = 0; deltaY: number = 0; animated: boolean = true})
    */
-  scrollResponderScrollBy: function(options : {deltaX?: number, deltaY?: number, animated?: boolean}) {
+  scrollResponderScrollBy: function(options : {deltaX?: number, deltaY?: number, animated?: boolean, id?: number}) {
     UIManager.dispatchViewManagerCommand(
       this.scrollResponderGetScrollableNode(),
       UIManager.RCTScrollView.Commands.scrollBy,
-      [options.deltaX || 0, options.deltaY || 0, options.animated !== false],
+      [options.deltaX || 0, options.deltaY || 0, options.animated !== false, options.id || 0],
     );
   },
 

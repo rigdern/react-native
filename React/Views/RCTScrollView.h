@@ -56,6 +56,7 @@
 @property (nonatomic, copy) RCTDirectEventBlock onScrollEndDrag;
 @property (nonatomic, copy) RCTDirectEventBlock onMomentumScrollBegin;
 @property (nonatomic, copy) RCTDirectEventBlock onMomentumScrollEnd;
+@property (nonatomic, copy) RCTDirectEventBlock onScrollPositionSet;
 
 @end
 
