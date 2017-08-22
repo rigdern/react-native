@@ -26,10 +26,12 @@ public class ReactScrollViewCommandHelper {
 
   public static final int COMMAND_SCROLL_TO = 1;
   public static final int COMMAND_SCROLL_TO_END = 2;
+  public static final int COMMAND_SCROLL_BY = 3;
 
   public interface ScrollCommandHandler<T> {
     void scrollTo(T scrollView, ScrollToCommandData data);
     void scrollToEnd(T scrollView, ScrollToEndCommandData data);
+    void scrollBy(T scrollView, ScrollByCommandData data);
   }
 
   public static class ScrollToCommandData {
@@ -53,12 +55,26 @@ public class ReactScrollViewCommandHelper {
     }
   }
 
+  public static class ScrollByCommandData {
+
+    public final int mDeltaX, mDeltaY;
+    public final boolean mAnimated;
+
+    ScrollByCommandData(int deltaX, int deltaY, boolean animated) {
+      mDeltaX = deltaX;
+      mDeltaY = deltaY;
+      mAnimated = animated;
+    }
+  }
+
   public static Map<String,Integer> getCommandsMap() {
     return MapBuilder.of(
         "scrollTo",
         COMMAND_SCROLL_TO,
         "scrollToEnd",
-        COMMAND_SCROLL_TO_END);
+        COMMAND_SCROLL_TO_END,
+        "scrollBy",
+        COMMAND_SCROLL_BY);
   }
 
   public static <T> void receiveCommand(
@@ -80,6 +96,14 @@ public class ReactScrollViewCommandHelper {
       case COMMAND_SCROLL_TO_END: {
         boolean animated = args.getBoolean(0);
         viewManager.scrollToEnd(scrollView, new ScrollToEndCommandData(animated));
+        return;
+      }
+      case COMMAND_SCROLL_BY: {
+        int deltaX = Math.round(PixelUtil.toPixelFromDIP(args.getDouble(0)));
+        int deltaY = Math.round(PixelUtil.toPixelFromDIP(args.getDouble(1)));
+        boolean animated = args.getBoolean(2);
+
+        viewManager.scrollBy(scrollView, new ScrollByCommandData(deltaX, deltaY, animated));
         return;
       }
       default:
