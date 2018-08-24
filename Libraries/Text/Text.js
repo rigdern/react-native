@@ -58,6 +58,7 @@ const viewConfig = {
     numberOfLines: true,
     ellipsizeMode: true,
     allowFontScaling: true,
+    maxContentSizeMultiplier: true,
     disabled: true,
     selectable: true,
     selectionColor: true,

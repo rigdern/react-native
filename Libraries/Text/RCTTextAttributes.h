@@ -31,6 +31,7 @@ extern NSString *const RCTTextAttributesTagAttributeName;
 @property (nonatomic, copy, nullable) NSString *fontFamily;
 @property (nonatomic, assign) CGFloat fontSize;
 @property (nonatomic, assign) CGFloat fontSizeMultiplier;
+@property (nonatomic, assign) CGFloat maxContentSizeMultiplier;
 @property (nonatomic, copy, nullable) NSString *fontWeight;
 @property (nonatomic, copy, nullable) NSString *fontStyle;
 @property (nonatomic, copy, nullable) NSArray<NSString *> *fontVariant;
@@ -54,6 +55,13 @@ extern NSString *const RCTTextAttributesTagAttributeName;
 @property (nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;
 @property (nonatomic, assign) RCTTextTransform textTransform;
 
+/**
+ * The global deafult for the largest possible scale a font can reach when `allowFontScaling` is
+ * enabled. A value of 0 indicates that there's no limit.
+ */
++ (CGFloat)getMaxContentSizeMultiplier;
++ (void)setMaxContentSizeMultiplier:(CGFloat)maxContentSizeMultiplier;
+
 #pragma mark - Inheritance
 
 - (void)applyTextAttributes:(RCTTextAttributes *)textAttributes;
@@ -71,7 +79,7 @@ extern NSString *const RCTTextAttributesTagAttributeName;
 - (UIFont *)effectiveFont;
 
 /**
- * Font size multiplier reflects `allowFontScaling` and `fontSizeMultiplier`.
+ * Font size multiplier reflects `allowFontScaling`, `fontSizeMultiplier`, and `maxContentSizeMultiplier`.
  */
 - (CGFloat)effectiveFontSizeMultiplier;
 

@@ -32,6 +32,7 @@
 #import "RCTShadowView.h"
 #import "RCTSurfaceRootShadowView.h"
 #import "RCTSurfaceRootView.h"
+#import "RCTTextAttributes.h"
 #import "RCTUIManagerObserverCoordinator.h"
 #import "RCTUIManagerUtils.h"
 #import "RCTUtils.h"
@@ -1559,6 +1560,21 @@ RCT_EXPORT_METHOD(configureNextLayoutAnimation:(NSDictionary *)config
   [self addUIBlock:^(RCTUIManager *uiManager, __unused NSDictionary<NSNumber *, UIView *> *viewRegistry) {
     [uiManager setNextLayoutAnimationGroup:layoutAnimationGroup];
   }];
+}
+
+RCT_EXPORT_METHOD(getMaxContentSizeMultiplier:(nonnull RCTResponseSenderBlock)callback)
+{
+  callback(@[@([RCTTextAttributes getMaxContentSizeMultiplier])]);
+}
+
+RCT_EXPORT_METHOD(setMaxContentSizeMultiplier:(CGFloat)maxContentSizeMultiplier)
+{
+  [RCTTextAttributes setMaxContentSizeMultiplier:maxContentSizeMultiplier];
+}
+
++ (CGFloat)getMaxContentSizeMultiplierInternal
+{
+  return defaultMaxContentSizeMultiplier;
 }
 
 - (void)rootViewForReactTag:(NSNumber *)reactTag withCompletion:(void (^)(UIView *view))completion
