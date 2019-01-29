@@ -52,9 +52,13 @@ RCT_EXPORT_MODULE()
 - (void)setUp
 {
   if (!_url) {
-    NSInteger port = [[[_bridge bundleURL] port] integerValue] ?: RCT_METRO_PORT;
-    NSString *host = [[_bridge bundleURL] host] ?: @"localhost";
-    NSString *URLString = [NSString stringWithFormat:@"http://%@:%lld/debugger-proxy?role=client", host, (long long)port];
+//    NSInteger port = [[[_bridge bundleURL] port] integerValue] ?: RCT_METRO_PORT;
+//    NSString *host = [[_bridge bundleURL] host] ?: @"localhost";
+//    NSString *URLString = [NSString stringWithFormat:@"http://%@:%lld/debugger-proxy?role=client", host, (long long)port];
+    
+    // Use our custom WebSocket server rather than the one that comes with React Native.
+    NSString *URLString = @"http://localhost:12180";
+    
     _url = [RCTConvert NSURL:URLString];
   }
 
