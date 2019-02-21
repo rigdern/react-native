@@ -60,6 +60,10 @@ const apps = [
       require('ScrollViewTestModule').HorizontalScrollViewTestApp,
   },
   {
+    appKey: 'InlineViewLayoutSnapshotTestApp',
+    component: () => require('InlineViewLayoutSnapshotTestModule').InlineViewLayoutSnapshotTestApp,
+  },
+  {
     appKey: 'ImageOverlayColorTestApp',
     component: () => require('ImageOverlayColorTestApp'),
   },

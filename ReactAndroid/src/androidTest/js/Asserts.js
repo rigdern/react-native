@@ -31,6 +31,9 @@ const Asserts = {
   assertTrue: function(expr, msg) {
     Asserts.assertEquals(true, expr, msg);
   },
+  assertFail: function(msg) {
+    Assert.fail(msg);
+  }
 };
 
 module.exports = Asserts;
