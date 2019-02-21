@@ -14,8 +14,10 @@ rn_android_prebuilt_aar(
     visibility = ["PUBLIC"],
 )
 
-fb_native.remote_file(
+fb_native.http_archive(
     name = "android-jsc-aar",
-    sha1 = "880cedd93f43e0fc841f01f2fa185a63d9230f85",
-    url = "mvn:org.webkit:android-jsc:aar:r174650",
+    sha256 = "97314795c473bfeb2a664ccda8b324caa6b6b5672e8a7b14fb74b57d77fd2ee8",
+    urls = ["https://registry.npmjs.org/jsc-android/-/jsc-android-236355.1.1.tgz"],
+    type = "tar.gz",
+    strip_prefix = "package/dist/org/webkit/android-jsc/r236355/android-jsc-r236355.aar"
 )
