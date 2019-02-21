@@ -1,3 +1,5 @@
+ReactAndroid/src/main/jni/prebuilt/lib
+
 # Xcode
 !**/*.xcodeproj
 !**/*.pbxproj
