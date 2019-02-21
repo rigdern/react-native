@@ -34,8 +34,8 @@ const ignoredTests = [
   'ReactHorizontalScrollViewTestCase',
 ];
 
-// ReactAndroid/src/androidTest/java/com/facebook/react/tests/ReactHorizontalScrollViewTestCase.java
-const testClasses = ls(`${argv.path}/*.java`)
+const testClasses = [`${argv.path}/InlineViewLayoutSnapshotTest.java`]
+// const testClasses = ls(`${argv.path}/*.java`)
   .map(javaFile => {
     // ReactHorizontalScrollViewTestCase
     return path.basename(javaFile, '.java');
