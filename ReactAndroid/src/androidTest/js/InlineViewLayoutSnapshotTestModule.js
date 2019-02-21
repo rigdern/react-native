@@ -11,6 +11,7 @@
 
 const BatchedBridge = require('BatchedBridge');
 const React = require('React');
+const TestState = require('NativeModules').TestState;
 import InlineViewSnapshotTest from './InlineViewSnapshotTest/InlineViewSnapshotTest';
 
 const Assert = require('Asserts');
@@ -26,22 +27,15 @@ class InlineViewLayoutSnapshotTestApp extends React.Component {
   render() {
     return (
       <InlineViewSnapshotTest
-        onAssertFail={(msg) => { Assert.fail(msg); }}
-        onTestsComplete={() => { done = true; }}
+        onAssertFail={(msg) => { Assert.assertFail(msg); }}
+        onTestsComplete={() => { TestState.testsComplete(); }}
       />
     );
   }
 }
 
-let done = false;
 const InlineViewLayoutSnapshotTestModule = {
   InlineViewLayoutSnapshotTestApp: InlineViewLayoutSnapshotTestApp,
-  verify: function() {
-    if (!done) {
-      Assert.fail('TESTS STILL RUNNING');
-    }
-    // assertEquals(1, 1, 'Test assert failed');
-  }
 };
 
 BatchedBridge.registerCallableModule(
