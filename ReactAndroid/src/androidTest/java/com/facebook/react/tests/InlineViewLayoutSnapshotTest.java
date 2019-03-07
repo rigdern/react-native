@@ -10,6 +10,7 @@ package com.facebook.react.tests;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import	android.util.Log;
 import com.facebook.react.bridge.BaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.testing.AssertModule;
@@ -65,7 +66,10 @@ public class InlineViewLayoutSnapshotTest extends ReactAppInstrumentationTestCas
   }
 
   public void testInlineViewLayout() {
+    Log.d("AHC", "0");
     mTestStateModule.waitForTestsToComplete();
+    Log.d("AHC", "1");
     mAssertModule.verifyAssertsAndReset();
+    Log.d("AHC", "2");
   }
 }

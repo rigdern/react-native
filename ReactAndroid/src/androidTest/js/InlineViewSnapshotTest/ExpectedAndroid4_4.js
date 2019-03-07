@@ -559,7 +559,7 @@ export default expected = {
   /* 46 */ "RTL: nested": {
     "output": [
       {
-        "bottom": 45,
+        "bottom": 46,
         "right": 175,
         "top": 36,
         "left": 165,
